@@ -2,10 +2,11 @@ from PIL.Image import ImageTransformHandler
 import cv2
 import numpy as np
 import pytesseract
-
+import  pandas as pd
+img_PATH = "C:\\Users\\thang\\Desktop\\project-identification-vehicel\\License-Plate-Recognition-main\\IMG.png"
 pytesseract.pytesseract.tesseract_cmd="C:/Program Files (x86)/Tesseract-OCR/tesseract.exe"
-
-cascade= cv2.CascadeClassifier("haarcascade_russian_plate_number.xml")
+ID=[]
+cascade= cv2.CascadeClassifier("License-Plate-Recognition-main\\haarcascade_russian_plate_number.xml")
 states={"AN":"Andaman and Nicobar",
     "AP":"Andhra Pradesh","AR":"Arunachal Pradesh",
     "AS":"Assam","BR":"Bihar","CH":"Chandigarh",
@@ -18,9 +19,18 @@ states={"AN":"Andaman and Nicobar",
     "PY":"Pondicherry","PN":"Punjab","RJ":"Rajasthan","SK":"Sikkim","TN":"TamilNadu",
     "TR":"Tripura","UP":"Uttar Pradesh", "WB":"West Bengal","CG":"Chhattisgarh",
     "TS":"Telangana","JH":"Jharkhand","UK":"Uttarakhand"}
-
-def extract_num(img_filename):
-    img=cv2.imread(img_filename)
+index = ["color", "color_name", "hex", "R", "G", "B"]
+data = pd.read_csv("C:\\Users\\thang\\Desktop\\project-identification-vehicel\\License-Plate-Recognition-main\\colors.csv", names=index, header=None)
+def recognize_color(R,G,B):
+    minimum = 10000
+    for i in range(len(data)):
+        d = abs(R- int(data.loc[i,"R"])) + abs(G- int(data.loc[i,"G"]))+ abs(B- int(data.loc[i,"B"]))
+        if(d<=minimum):
+            minimum = d
+            cname = data.loc[i,"color_name"]
+    return cname
+def extract_num(PATH):
+    img=cv2.imread(PATH)
     #Img To Gray
     gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     nplate=cascade.detectMultiScale(gray,1.1,4)
@@ -42,14 +52,22 @@ def extract_num(img_filename):
         cv2.rectangle(img,(x,y),(x+w,y+h),(51,51,255),2)
         cv2.rectangle(img,(x-1,y-40),(x+w+1,y),(51,51,255),-1)
         cv2.putText(img,read,(x,y-10),cv2.FONT_HERSHEY_SIMPLEX,0.9,(255,255,255),2)
-        print(read)
         cv2.imshow("plate",plate)
-        
-    cv2.imwrite("Result.png",img)
-    cv2.imshow("Result",img)
+        ID.append(read[:2]) 
+        print(read)
+        b,g,r = img[500,220]
+        b = int(b)
+        g = int(g)
+        r = int(r)
+        # print(recognize_color(r,g,b) + ' R='+ str(r) +  ' G='+ str(g) +  ' B='+ str(b))
+        ID.append(recognize_color(r,g,b))
+        ID.append(read[-4:])
+    print(ID)
     if cv2.waitKey(0)==113:
         exit()
     cv2.destroyAllWindows()
+img = cv2.imread(img_PATH)
 
-extract_num("images.jpg")
-
+img = cv2.circle(img,(500,220),radius=0,color = (60,20,255), thickness = 5)
+cv2.imshow("xy",img)
+extract_num(img_PATH)
