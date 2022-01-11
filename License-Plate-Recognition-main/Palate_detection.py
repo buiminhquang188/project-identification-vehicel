@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import pytesseract
 import  pandas as pd
-img_PATH = "C:\\Users\\thang\\Desktop\\project-identification-vehicel\\License-Plate-Recognition-main\\IMG.png"
+img_PATH = "C:\\Users\\Administrator\\Desktop\\project-identification-vehicel\\License-Plate-Recognition-main\\car_img.png"
 pytesseract.pytesseract.tesseract_cmd="C:/Program Files (x86)/Tesseract-OCR/tesseract.exe"
 ID=[]
 cascade= cv2.CascadeClassifier("License-Plate-Recognition-main\\haarcascade_russian_plate_number.xml")
@@ -20,7 +20,7 @@ states={"AN":"Andaman and Nicobar",
     "TR":"Tripura","UP":"Uttar Pradesh", "WB":"West Bengal","CG":"Chhattisgarh",
     "TS":"Telangana","JH":"Jharkhand","UK":"Uttarakhand"}
 index = ["color", "color_name", "hex", "R", "G", "B"]
-data = pd.read_csv("C:\\Users\\thang\\Desktop\\project-identification-vehicel\\License-Plate-Recognition-main\\colors.csv", names=index, header=None)
+data = pd.read_csv("C:\\Users\\Administrator\\Desktop\\project-identification-vehicel\\License-Plate-Recognition-main\\colors.csv", names=index, header=None)
 def recognize_color(R,G,B):
     minimum = 10000
     for i in range(len(data)):
@@ -32,7 +32,7 @@ def recognize_color(R,G,B):
 def extract_num(PATH):
     img=cv2.imread(PATH)
     #Img To Gray
-    gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     nplate=cascade.detectMultiScale(gray,1.1,4)
     #crop portion
     for (x,y,w,h) in nplate:
@@ -66,8 +66,8 @@ def extract_num(PATH):
     if cv2.waitKey(0)==113:
         exit()
     cv2.destroyAllWindows()
-img = cv2.imread(img_PATH)
 
-img = cv2.circle(img,(500,220),radius=0,color = (60,20,255), thickness = 5)
+img = cv2.imread(img_PATH)
+img = cv2.circle(img,(500,220),radius=0, color=(60,20,255), thickness = 5)
 cv2.imshow("xy",img)
 extract_num(img_PATH)
