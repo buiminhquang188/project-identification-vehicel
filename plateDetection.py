@@ -6,9 +6,6 @@ import os
 import pandas as pd
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"
 index = ["color", "color_name", "hex", "R", "G", "B"]
-ID = []
-
-camID = "1"
 plateStored = []
 data = pd.read_csv("Resource\colors.csv", names=index, header=None)
 def recognize_color(R,G,B):
