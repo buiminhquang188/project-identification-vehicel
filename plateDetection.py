@@ -1,35 +1,40 @@
-
 import cv2
 import imutils
 import pytesseract
-import os
 import pandas as pd
+
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"
 index = ["color", "color_name", "hex", "R", "G", "B"]
 plateStored = []
-data = pd.read_csv("Resource\colors.csv", names=index, header=None)
+data = pd.read_csv("Resource\\colors.csv", names=index, header=None)
+carColor =""
+
 def recognize_color(R,G,B):
     minimum = 10000
+    color_name = ""
     for i in range(len(data)):
-        d = abs(R - int(data.loc[i,"R"])) + abs(G- int(data.loc[i,"G"]))+ abs(B- int(data.loc[i,"B"]))
-        if  (d <= minimum):
+        d = abs(R - int(data.loc[i, "R"])) + abs(G - int(data.loc[i, "G"])) + abs(B - int(data.loc[i, "B"]))
+        if d <= minimum:
             minimum = d
-            cname = data.loc[i, "color_name"]
-    return(cname)
+            color_name = data.loc[i, "color_name"]
+    return color_name
+
+
 def Detection(PATH):
+    global carColor
     image = cv2.imread(PATH)
     image = imutils.resize(image, width=900)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = cv2.bilateralFilter(gray, 11, 17, 17)
     edged = cv2.Canny(gray, 170, 200)
-    cnts, new = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    cnt, new = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     img1 = image.copy()
-    cv2.drawContours(img1, cnts, -1, (0,255,0), 3)
-    cnts = sorted(cnts, key=cv2.contourArea, reverse=True)[:30]
+    cv2.drawContours(img1, cnt, -1, (0,255,0), 3)
+    cnt = sorted(cnt, key=cv2.contourArea, reverse=True)[:30]
     NumberPlateCnt = None
     img2 = image.copy()
-    cv2.drawContours(img2, cnts, -1, (0,255,0), 3)
-    for c in cnts:
+    cv2.drawContours(img2, cnt, -1, (0,255,0), 3)
+    for c in cnt:
         peri = cv2.arcLength(c, True)
         approx = cv2.approxPolyDP(c, 0.02 * peri, True)
         if len(approx) == 4:

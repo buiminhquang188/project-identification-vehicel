@@ -5,12 +5,13 @@ CAM_1_ID = "THIS IS CAM 1"
 cam1Data =[]
 def recognize_color(R,G,B):
     minimum = 10000
+    color_name = ""
     for i in range(len(data)):
         d = abs(R - int(data.loc[i,"R"])) + abs(G- int(data.loc[i,"G"]))+ abs(B- int(data.loc[i,"B"]))
         if  (d <= minimum):
             minimum = d
-            cname = data.loc[i, "color_name"]
-    return(cname)
+            color_name = data.loc[i, "color_name"]
+    return(color_name)
 def cam1List():
     for path in os.listdir(folder):
         full_path = os.path.join(folder, path)
