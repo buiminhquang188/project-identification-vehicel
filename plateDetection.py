@@ -16,7 +16,7 @@ def recognize_color(R,G,B):
         d = abs(R - int(data.loc[i, "R"])) + abs(G - int(data.loc[i, "G"])) + abs(B - int(data.loc[i, "B"]))
         if d <= minimum:
             minimum = d
-            color_name = data.loc[i, "color_name"]
+            color_name = data.loc[i, "hex"]
     return color_name
 
 
