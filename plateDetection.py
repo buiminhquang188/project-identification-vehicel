@@ -45,11 +45,11 @@ def Detection(PATH):
             b = int(b)
             g = int(g)
             r = int(r)
-            cv2.imwrite('C:/Users/Administrator/Desktop/project-identification-vehicel/Cropped Images-Text/Croped.png', new_img)
+            cv2.imwrite('Cropped Images-Text/Croped.png', new_img)
             carColor = recognize_color(r, g, b)
             break
 
-    Img_path = 'C:/Users/Administrator/Desktop/project-identification-vehicel/Cropped Images-Text/Croped.png'
+    Img_path = 'Cropped Images-Text/Croped.png'
     cv2.drawContours(image, [NumberPlateCnt], -1, (0, 255, 0), 3)
     Cropped_img_loc = Img_path
     Plate_num = pytesseract.image_to_string(Cropped_img_loc, lang='eng')
