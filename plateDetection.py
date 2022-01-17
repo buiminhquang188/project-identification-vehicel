@@ -58,4 +58,5 @@ def Detection(PATH):
     plateStored = []
     plateStored.append(Plate_num)
     plateStored.append(carColor)
+    print("detec: ",plateStored)
     return plateStored
