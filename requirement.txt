@@ -1,0 +1,8 @@
+datetime
+opencv-python
+pytesseract
+imutils
+pandas
+mysql-connector-python
+pyqt5-tools
+pyqt5
